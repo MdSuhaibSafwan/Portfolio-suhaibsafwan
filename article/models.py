@@ -23,35 +23,17 @@ class ArticleBar(models.Model):
 
     def save(self, *args, **kwargs):
         slug = self.slug
-        if slug is None:
+        if (slug is None) or (slug == "") or (slug == "slug"):
             self.slug = slugify_title(self.title)
 
         return super().save(*args, **kwargs)
-        
-    def __str__(self):
-        return self.title
-
-
-class ArticleSection(models.Model):
-    article_bar = models.ForeignKey(ArticleBar, on_delete=models.CASCADE, related_name="sections")
-    title = models.CharField(max_length=150)
-    body = models.TextField()
-    slug = models.SlugField()
-    timestamp = models.DateTimeField(auto_now_add=True)
-    last_updated = models.DateTimeField(auto_now=True)
 
     def __str__(self):
         return self.title
-
-    def save(self, *args, **kwargs):
-        slug = self.slug
-        if slug is None:
-            self.slug = slugify_title(self.title)
-
-        return super().save(*args, **kwargs)
 
 
 class Article(models.Model):
+    article_bar = models.ForeignKey(ArticleBar, on_delete=models.SET_NULL, null=True, related_name="sections")
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="articles")
     title = models.CharField(max_length=150)
     body = models.TextField()
@@ -64,7 +46,7 @@ class Article(models.Model):
 
     def save(self, *args, **kwargs):
         slug = self.slug
-        if slug is None:
+        if (slug is None) or (slug == "") or (slug == "slug"):
             self.slug = slugify_title(self.title)
 
         return super().save(*args, **kwargs)
