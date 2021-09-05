@@ -1,11 +1,15 @@
 import os
 from pathlib import Path
+import environ
+
+env = environ.Env()
+env.read_env()
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-SECRET_KEY = 'django-insecure-$a83k8yysv_5_&k*(mais#rpmiu7id8&%s42xz7!(9qxw4(mkb'
+SECRET_KEY = os.environ.get("SECRET_KEY")
 
-DEBUG = True
+DEBUG = os.environ.get("DEBUG") == "True"
 
 ALLOWED_HOSTS = ["127.0.0.1", "localhost", ]
 
@@ -19,6 +23,9 @@ INSTALLED_APPS = [
 
     'main.apps.MainConfig',
     'article.apps.ArticleConfig',
+
+    'rest_framework',
+    'rest_framework.authtoken',
 
 ]
 
@@ -56,7 +63,7 @@ WSGI_APPLICATION = 'portfolio.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'NAME': BASE_DIR / 'portfolio.sqlite3',
     }
 }
 
@@ -86,5 +93,14 @@ USE_L10N = True
 USE_TZ = True
 
 STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(BASE_DIR, "static_root")
+STATIC_DIR1 = os.path.join(BASE_DIR, "staticfiles")
+
+STATICFILES_DIRS = [
+    STATIC_DIR1, 
+]
+
+MEDIA_ROOT = os.path.join(BASE_DIR, "images")
+MEDIA_URL = "/images/"
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
